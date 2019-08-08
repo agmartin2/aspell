@@ -92,6 +92,8 @@ libaspell_la_SOURCES =\
   lib/string_pair_enumeration-c.cpp\
   lib/new_checker.cpp
 
+EXTRA_libaspell_la_DEPENDENCIES = $(srcdir)/auto/auto
+
 libaspell_la_LIBADD =  $(LTLIBINTL) $(PTHREAD_LIB)
 
 ## The version string is current[:revision[:age]]
@@ -320,8 +322,6 @@ EXTRA_DIST += scripts/mkconfig scripts/spell scripts/ispell \
 # auto
 #
 
-# FIXME: add dependences
-
 noinst_DATA += auto
 
 mksrc = \
@@ -333,10 +333,10 @@ mksrc = \
  auto/MkSrc/Info.pm            auto/MkSrc/ProcCxx.pm\
  auto/MkSrc/ProcNative.pm      auto/MkSrc/Util.pm
 
-#auto: @MAINTAINER_MODE_TRUE@ ${mksrc}
-#	cd auto; perl mk-src.pl
-#	cd auto; perl auto/mk-doc.pl
-#	touch auto/auto
+$(srcdir)/auto/auto: @MAINTAINER_MODE_TRUE@ ${mksrc}
+	cd "$(srcdir)/auto" && perl -I ./ mk-src.pl
+	cd "$(srcdir)/auto" && perl -I ./ mk-doc.pl
+	touch "$(srcdir)/auto/auto"
 
 EXTRA_DIST += auto/auto auto/mk-src.txt ${mksrc}
 
